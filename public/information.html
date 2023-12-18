@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Інформація про користувача</title>
+  <link rel="stylesheet" type="text/css" href="informationStyle.css">
+</head>
+<body>
+  <h2>Інформація про користувача</h2>
+  <div id="userInfo"></div>
+  <p><a href="login.html">Вийти</a></p>
+  
+  <script src="script.js"></script>
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    displayUserInfo(user);
+  </script>
+</body>
+</html>

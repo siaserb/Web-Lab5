@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Авторизація</title>
+  <link rel="stylesheet" type="text/css" href="loginStyle.css">
+</head>
+<body>
+  <h2>Авторизація</h2>
+  <form id="loginForm">
+    <label for="login">Логін:</label>
+    <input type="text" id="login" name="login" required>
+    <br>
+    <label for="password">Пароль:</label>
+    <div class="password-input">
+      <input type="password" id="password" name="password" required>
+      <span id="togglePassword" onclick="togglePasswordVisibility()">👁️</span>
+    </div>
+    <br>
+<button type="button" onclick="performLogin()">Увійти</button>
+    <div id="errorMessage" class="error-message"></div>
+  </form>
+
+  <p>Ще не зареєстровані? <a href="register.html">Зареєструйтесь тут</a></p>
+
+  <script src="script.js"></script>
+</body>
+</html>

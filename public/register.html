@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Реєстрація</title>
+  <link rel="stylesheet" type="text/css" href="registerStyle.css">
+</head>
+<body>
+  <div class="center-container">
+    <form id="registrationForm" class="validation-form" onsubmit="register(); return false;">
+        <label for="pib">ПІБ:</label>
+        <input type="text" id="pib" name="pib" required>
+        <small>Введіть ПІБ, наприклад, Прізвище І.І.</small>
+
+        <label for="variant">Варіант:</label>
+        <input type="text" id="variant" name="variant" required>
+        <small>Введіть варіант, наприклад, 01</small>
+
+        <label for="phone">Телефон:</label>
+        <input type="tel" id="phone" name="phone" oninput="formatPhoneNumber()" required>
+        <small>Введіть телефон, наприклад, 0975435453</small>
+
+        <label for="faculty">Факультет:</label>
+        <input type="text" id="faculty" name="faculty" required>
+        <small>Введіть факультет, наприклад, ФІОТ</small>
+
+        <label for="address">Адреса:</label>
+        <input type="text" id="address" name="address" oninput="addCityPrefix()" required>
+        <small>Введіть назву міста</small>
+
+        <label for="login">Логін:</label>
+        <input type="text" id="login" name="login" required>
+        <small>Введіть логін</small>
+
+        <div class="password-input">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+            <span id="togglePassword" onclick="togglePasswordVisibility(this)">👁️</span>
+          </div>
+
+        <button type="submit">Зареєструватися</button>
+        <div id="errorMessage" class="error-message"></div>
+        <p class="back-to-login" onclick="goToLogin()">Повернутись до входу</p>
+    </form>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
