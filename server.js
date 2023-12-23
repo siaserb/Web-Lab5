@@ -25,7 +25,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  const { login, password, pib, variant, phone, faculty, address } = req.body;
+  const { login, password, pib, variant, phone, faculty, address, role } = req.body;
 
   if (registeredUsers[login]) {
     return res.status(400).json({ message: 'Користувач з таким ім\'ям вже існує' });
@@ -39,13 +39,66 @@ app.post('/register', (req, res) => {
     variant,
     phone,
     faculty,
-    address
+    address,
+    role
   };
 
   registeredUsers[login] = newUser;
 
   const { password: userPassword, ...userInfo } = newUser;
   res.json(userInfo);
+});
+
+app.get('/allUsers', (req, res) => {
+  try {
+    const users = Object.values(registeredUsers);
+    res.json(users);
+  } catch (error) {
+    console.error('Помилка при отриманні списку користувачів:', error);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+});
+
+app.put('/editUser/:login', (req, res) => {
+  try {
+    const oldLogin = req.params.login;
+    const newLogin = req.body.newLogin;
+
+    if (registeredUsers[oldLogin]) {
+      // Оновлюємо логін у користувача, залишаючи інші дані незмінними
+      registeredUsers[newLogin] = registeredUsers[oldLogin];
+      registeredUsers[oldLogin].login = newLogin;
+      delete registeredUsers[oldLogin];
+
+
+
+      res.json({ message: 'Користувача відредаговано', newLogin });
+    } else {
+      res.status(404).json({ message: 'Користувача не знайдено' });
+    }
+  } catch (error) {
+    console.error('Помилка при редагуванні користувача:', error);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
+});
+
+
+
+app.delete('/deleteUser/:login', (req, res) => {
+  try {
+    const login = req.params.login;
+
+    if (registeredUsers[login]) {
+      delete registeredUsers[login];
+
+      res.json({ message: 'Користувач видалений' });
+    } else {
+      res.status(404).json({ message: 'Користувача не знайдено' });
+    }
+  } catch (error) {
+    console.error('Помилка при видаленні користувача:', error);
+    res.status(500).json({ message: 'Помилка сервера' });
+  }
 });
   
 app.get('/', (req, res) => {

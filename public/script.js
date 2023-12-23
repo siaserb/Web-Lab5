@@ -1,10 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const isInformationPage = window.location.pathname.includes('information.html');
 
-  if (isInformationPage) {
-    loadUserInfo();
-  }
-});
 
 async function performLogin() {
   const login = document.getElementById('login').value;
@@ -64,13 +58,14 @@ async function register() {
   const phone = document.getElementById('phone').value;
   const faculty = document.getElementById('faculty').value;
   const address = document.getElementById('address').value;
+  const role = document.getElementById('role').value; 
 
   const response = await fetch('http://localhost:3000/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ login, password, pib, variant, phone, faculty, address }),
+    body: JSON.stringify({ login, password, pib, variant, phone, faculty, address, role }),
   });
 
   if (response.ok) {
@@ -211,4 +206,110 @@ function displayUserInfo(userInfo) {
   `;
 
   userInfoElement.innerHTML = userInfoHTML;
+}
+
+async function loadAllUsers() {
+  try {
+    const response = await fetch('http://localhost:3000/allUsers', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',  // Додайте цей заголовок
+      },
+    });
+
+    if (response.ok) {
+      const allUsers = await response.json();
+      displayAllUsers(allUsers);
+    } else {
+      console.error('Помилка при завантаженні всіх користувачів');
+    }
+  } catch (error) {
+    console.error('Помилка при завантаженні всіх користувачів:', error);
+  }
+}
+
+
+function displayAllUsers(users) {
+  const allUsersElement = document.getElementById('allUsers');
+
+  if (users.length > 0) {
+    let usersHTML = '<h4>Список усіх користувачів:</h4>';
+    users.forEach(user => {
+      usersHTML += `
+        <div class="user-card">
+          <p><strong>Логін:</strong> ${user.login}</p>
+          <p><strong>Роль:</strong> ${user.role}</p>
+          <button onclick="editUser('${user.login}')">Редагувати</button>
+          <button onclick="deleteUser('${user.login}')">Видалити</button>
+        </div>
+      `;
+    });
+    allUsersElement.innerHTML = usersHTML;
+  } else {
+    allUsersElement.innerHTML = '<p>Немає користувачів</p>';
+  }
+}
+
+async function editUser(login) {
+  const newLogin = prompt('Введіть новий логін для користувача:');
+  if (newLogin) {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('user'));
+
+      const response = await fetch(`http://localhost:3000/editUser/${login}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ oldLogin: userInfo.login, newLogin }),
+      });
+
+      if (response.ok) {
+        console.log('Користувача відредаговано');
+
+        // Оновлюємо логін в localStorage
+        userInfo.login = newLogin;
+        localStorage.setItem('user', JSON.stringify(userInfo));
+
+        // Оновлюємо інформацію про користувача на сторінці
+        document.getElementById('userInfo').innerText = newLogin;
+
+        displayUserInfo(userInfo);
+
+        if (userInfo.role === 'admin') {
+          loadAllUsers();
+        }
+      } else {
+        console.error('Помилка при редагуванні користувача');
+      }
+    } catch (error) {
+      console.error('Помилка при редагуванні користувача:', error);
+    }
+  }
+}
+
+
+
+async function deleteUser(login) {
+  const confirmation = confirm(`Ви впевнені, що хочете видалити користувача ${login}?`);
+  if (confirmation) {
+    try {
+      const response = await fetch(`http://localhost:3000/deleteUser/${login}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        console.log('Користувача видалено');
+        loadAllUsers();
+      } else {
+        console.error('Помилка при видаленні користувача');
+      }
+    } catch (error) {
+      console.error('Помилка при видаленні користувача:', error);
+    }
+  }
 }

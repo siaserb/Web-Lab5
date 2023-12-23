@@ -37,7 +37,15 @@
             <label for="password">Пароль:</label>
             <input type="password" id="password" name="password" required>
             <span id="togglePassword" onclick="togglePasswordVisibility(this)">👁️</span>
-          </div>
+        </div>
+
+        <label for="role">Роль:</label>
+        <select id="role" name="role" required>
+          <option value="admin">Адмін</option>
+          <option value="user">Юзер</option>
+        </select>
+        <small>Оберіть роль</small>
+
 
         <button type="submit">Зареєструватися</button>
         <div id="errorMessage" class="error-message"></div>

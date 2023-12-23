@@ -15,6 +15,17 @@
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     displayUserInfo(user);
+
+    if (user.role === 'admin') {
+      const adminActionsHTML = `
+        <div id="adminActions">
+          <h3>Адміністраторські дії</h3>
+          <button onclick="loadAllUsers()">Завантажити всіх користувачів</button>
+          <div id="allUsers"></div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', adminActionsHTML);
+    }
   </script>
 </body>
 </html>
